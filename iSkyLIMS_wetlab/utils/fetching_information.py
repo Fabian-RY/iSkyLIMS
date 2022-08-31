@@ -14,6 +14,77 @@ from .generic_functions import normalized_data, get_run_in_same_year_to_compare
 from iSkyLIMS_wetlab.utils.sample_functions import get_sample_in_project_obj_from_id
 from .stats_graphics import *
 
+def get_boxplot_comparation_runs_metric (run_object, metric, title):
+    if not StatsLaneSummary.objects.filter(runprocess_id__exact =run_object ).exclude(defaultAll__isnull = False).exists():
+        # return empty information . No information for stats stored on database
+        return
+    run_lane_summary = StatsLaneSummary.objects.filter(runprocess_id__exact =run_object ).exclude(defaultAll__isnull = False)
+    metric_run_value  = []
+    metric_run_value_float = []
+    metric_all_value_float = []
+
+    for item in run_lane_summary:
+        metric_value = item.get_stats_info()[metric]
+        print('metric', metric)
+        if metric == 0 or metric == 1:
+           print('metric 0 o 1')
+           metric_run_value_float.append(float(metric_value))
+        else:
+           print('metric 2 y 3')
+           metric_run_value_float.append(float(metric_value.replace(',','')))
+
+    # Repeat data to get at least 3 set of data to get the visualization
+    if len(run_lane_summary) < 3:
+        metric_run_value_float = np.repeat(metric_run_value_float,3)
+    # get the chemistry type for the run, that will be used to compare runs with the same chemistry value
+
+    same_run_in_year = get_run_in_same_year_to_compare(run_object)
+    same_runs_in_year_list = []
+    for run in same_run_in_year :
+        same_runs_in_year_list.append(run.get_run_id())
+
+    all_lane_summary = StatsLaneSummary.objects.filter(runprocess_id__in = same_runs_in_year_list).exclude(defaultAll__isnull = False).exclude(runprocess_id__exact =run_object)
+    if len(all_lane_summary) == 0 :
+        # It is the first run in the year. Then include it until more than one run was stored
+        all_lane_summary = StatsLaneSummary.objects.filter(runprocess_id__in = same_runs_in_year_list).exclude(defaultAll__isnull = False)
+    for item in all_lane_summary:
+        metric_value = item.get_stats_info()[metric]
+        if metric == 0 or metric == 1:
+            metric_all_value_float.append(float(metric_value))
+        else:
+            metric_all_value_float.append(float(metric_value.replace(',','')))
+
+    normalized_set_data, normalized_all_data = [] , []
+    for value in metric_run_value_float:
+        normalized_set_data.append(format(value*1 ,'.2f'))
+    for value in metric_all_value_float:
+        normalized_all_data.append(format( value*1,'.2f'))
+    metric_run_str = ','.join(normalized_set_data)
+    metric_all_str = ','.join(normalized_all_data)
+    # prepare the graphic
+    run_year = run_object.get_run_year()
+    heading =  run_object.get_run_name() +' versus runs executed on '
+    sub_caption = str( 'year ' + str(run_year))
+    theme = 'fint'
+    x_axis_name = 'Quatilty measures'
+    y_axis_name = title
+    #series = [[run_object.runName,'#0075c2', '#1aaf5d'],['All runs','#f45b00','#f2c500']]
+    series = [[run_object.runName,'#0075c2', '#0075c2'],['All runs','#f45b00','#f45b00']]
+    data = [[metric_run_str],[metric_all_str]]
+    if metric == 0:
+       cat = 'Q>30'
+    if metric == 1:
+       cat = 'Mean Quality Score'
+    if metric == 2:
+       cat = 'Yield MB'
+    if metric == 3:
+       cat = 'Cluster PF'
+    categories = [ cat, '']
+    data_source = bloxplot_graphic(heading, sub_caption, x_axis_name, y_axis_name, theme, categories, series, data)
+    box = 'boxmetric' + str(metric)
+    box_chart = 'boxmetric_chart' + str(metric)
+    return FusionCharts("boxandwhisker2d", box , "400", "400", box_chart , "json", data_source).render()
+
 
 def get_boxplot_comparation_runs (run_object):
     '''
@@ -600,6 +671,10 @@ def get_information_run(run_object):
         if len(get_run_in_same_year_to_compare(run_object)) > 1 :
             # prepare the data for run comparations
             info_dict ['boxplot'] = get_boxplot_comparation_runs (run_object)
+            info_dict ['boxplotQ30'] = get_boxplot_comparation_runs_metric (run_object, 0, 'Q30 quality score')
+            info_dict ['boxplotmean'] = get_boxplot_comparation_runs_metric (run_object, 1, 'Mean quality score')
+            info_dict ['boxplotyield'] = get_boxplot_comparation_runs_metric (run_object, 2, 'Yield(Mbases)')
+            info_dict ['boxplotclusters'] = get_boxplot_comparation_runs_metric (run_object, 3, 'PF Clusters')
         else:
             info_dict['not_boxplot'] = "True"
         percent_projects = {}

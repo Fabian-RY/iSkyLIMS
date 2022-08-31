@@ -204,18 +204,13 @@ def create_new_resolution(resolution_data_form):
     resolution_data_form['resolutionNumber'] = create_resolution_number(resolution_data_form['service_id'])
 
     #service_request_number = service_obj.get_service_request_number()
-    new_resolution = Resolution.objects.create_resolution(resolution_data_form)
-    if  'select_available_services'  not in resolution_data_form :
-        # include all services in the resolution
-        resolution_data_form['select_available_services'] = []
-        avail_services = service_obj.get_child_services()
-        for avail_service in avail_services:
-            resolution_data_form['select_available_services'].append(avail_service[0])
 
-    # Add selected available services to the new resolution
-    for avail_sarvice in resolution_data_form['select_available_services'] :
-        avail_service_obj = get_available_service_obj_from_id(avail_sarvice)
-        new_resolution.availableServices.add(avail_service_obj)
+    new_resolution = Resolution.objects.create_resolution(resolution_data_form)
+    if 'select_available_services' in resolution_data_form :
+        # Add selected available services to the new resolution
+        for avail_sarvice in resolution_data_form['select_available_services'] :
+            avail_service_obj = get_available_service_obj_from_id(avail_sarvice)
+            new_resolution.availableServices.add(avail_service_obj)
 
     if 'pipelines' in resolution_data_form:
         for pipeline in resolution_data_form['pipelines']:
@@ -374,7 +369,8 @@ def send_resolution_creation_email (email_data):
     body_message = '\n'.join(body_preparation)
     notification_user = ConfigSetting.objects.filter(configurationName__exact = 'EMAIL_FOR_NOTIFICATIONS').last().get_configuration_value()
     from_user = notification_user
-    to_users = [email_data['user_email'], email_data['service_owner_email'], notification_user]
+    #to_users = [email_data['user_email'], email_data['service_owner_email'], notification_user]
+    to_users = [email_data['user_email'], email_data['service_owner_email']]
     try:
         send_mail (subject, body_message, from_user, to_users)
     except:
@@ -405,12 +401,45 @@ def send_resolution_in_progress_email (email_data):
     body_message = '\n'.join(body_preparation)
     notification_user = ConfigSetting.objects.filter(configurationName__exact = 'EMAIL_FOR_NOTIFICATIONS').last().get_configuration_value()
     from_user = notification_user
+    #to_users = [email_data['user_email'], notification_user]
+    to_users = [email_data['user_email']]
+    try:
+        send_mail (subject, body_message, from_user, to_users)
+    except:
+        pass
+    return
+
+def send_resolution_panel_in_progress_email (email_data):
+    '''
+    Description:
+        The function send the service email for resolution in progress to user.
+        Functions uses the send_email django core function to send the email
+    Input:
+        email_data      # Contains the information to include in the email
+    Constant:
+        SUBJECT_RESOLUTION_RECORDED
+        BODY_RESOLUTION_IN_PROGRESS
+        USER_EMAIL
+    Return:
+        None
+    '''
+    subject_tmp = drylab_config.SUBJECT_RESOLUTION_PANEL_FINISHED.copy()
+    subject_tmp.insert(1, email_data['resolution_number'])
+    subject = ' '.join(subject_tmp)
+    body_preparation = list(map(lambda st: str.replace(st, 'RESOLUTION_NUMBER', email_data['resolution_number']), drylab_config.BODY_RESOLUTION_PANEL_FINISHED))
+    body_preparation = list(map(lambda st: str.replace(st, 'USER_NAME', email_data['user_name']), body_preparation))
+    body_preparation = list(map(lambda st: str.replace(st, 'PANEL', email_data['panel']), body_preparation))
+    body_message = '\n'.join(body_preparation)
+    
+    notification_user = ConfigSetting.objects.filter(configurationName__exact = 'EMAIL_FOR_NOTIFICATIONS').last().get_configuration_value()
+    from_user = notification_user
     to_users = [email_data['user_email'], notification_user]
     try:
         send_mail (subject, body_message, from_user, to_users)
     except:
         pass
     return
+
 
 def store_resolution_additional_parameter(additional_parameters, resolution_obj):
     '''

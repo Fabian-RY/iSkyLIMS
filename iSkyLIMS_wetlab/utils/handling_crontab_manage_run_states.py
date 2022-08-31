@@ -44,25 +44,29 @@ def manage_run_in_recorded_state(conn, run_process_objs):
         if not  RunningParameters.objects.filter(runName_id = run_process_obj).exists():
             logger.info('%s : Ignore this run. Waiting for existing folder on remote server', experiment_name)
             continue
+        #import pdb;pdb.set_trace()
         run_folder = RunningParameters.objects.filter(runName_id = run_process_obj).last().get_run_folder()
-        if run_process_obj.get_sample_file() == '':
-            # sample sheet does not included yet in run process. Try to get it from remote server
-            l_sample_sheet_path = get_remote_sample_sheet(conn, run_folder ,experiment_name)
-            if not l_sample_sheet_path :
-                maximun_time = ConfigSetting.objects.filter(configurationName__exact = 'MAXIMUM_TIME_WAIT_SAMPLE_SHEET').last().get_configuration_value()
-                time_to_check = run_process_obj.get_run_generated_date_no_format().date()
-                if not waiting_time_expired(run_process_obj,time_to_check, maximun_time ,experiment_name):
-                    logger.debug ('%s : End the process. Waiting more time to get Sample Sheet file', experiment_name)
-                    continue
-                else:
-                    string_message = experiment_name + ' : Expired time for waiting for Sample Sheet file on folder ' + run_folder
-                    logging_errors(string_message, False, True)
-                    handling_errors_in_run (experiment_name, 19)
-                    logger.debug ('%s : Aborting the process. Exceeded the waiting time for fetching ths sample sheet', experiment_name)
-                    continue
-            assign_projects_to_run(run_process_obj, l_sample_sheet_path, experiment_name)
-            assign_used_library_in_run (run_process_obj,l_sample_sheet_path, experiment_name )
-            store_sample_sheet_if_not_defined_in_run (run_process_obj,l_sample_sheet_path, experiment_name)
+        #coment if
+        #if run_process_obj.get_sample_file() == '':
+        #*****unblock following lines
+        # sample sheet does not included yet in run process. Try to get it from remote server
+        l_sample_sheet_path = get_remote_sample_sheet(conn, run_folder ,experiment_name)
+        if not l_sample_sheet_path :
+            maximun_time = ConfigSetting.objects.filter(configurationName__exact = 'MAXIMUM_TIME_WAIT_SAMPLE_SHEET').last().get_configuration_value()
+            time_to_check = run_process_obj.get_run_generated_date_no_format().date()
+            if not waiting_time_expired(run_process_obj,time_to_check, maximun_time ,experiment_name):
+                logger.debug ('%s : End the process. Waiting more time to get Sample Sheet file', experiment_name)
+                continue
+            else:
+                string_message = experiment_name + ' : Expired time for waiting for Sample Sheet file on folder ' + run_folder
+                logging_errors(string_message, False, True)
+                handling_errors_in_run (experiment_name, 19)
+                logger.debug ('%s : Aborting the process. Exceeded the waiting time for fetching ths sample sheet', experiment_name)
+                continue
+        assign_projects_to_run(run_process_obj, l_sample_sheet_path, experiment_name)
+        assign_used_library_in_run (run_process_obj,l_sample_sheet_path, experiment_name )
+        store_sample_sheet_if_not_defined_in_run (run_process_obj,l_sample_sheet_path, experiment_name)
+        #*****last line unblock
 
         if COPY_SAMPLE_SHEET_TO_REMOTE and 'NextSeq' in run_process_obj.get_run_platform() :
             sample_sheet_path = run_process_obj.get_sample_file()
@@ -109,7 +113,6 @@ def manage_run_in_sample_sent_processing_state(conn, run_process_objs):
         run_folder = RunningParameters.objects.filter(runName_id = run_process_obj).last().get_run_folder()
         number_of_cycles =  RunningParameters.objects.filter(runName_id = run_process_obj).last().get_number_of_cycles()
         run_status, run_completion_date = check_sequencer_run_is_completed(conn, run_folder , platform , number_of_cycles, experiment_name)
-
         if run_status == 'completed':
             run_process_obj.set_run_state('Processed Run')
             run_process_obj.set_run_completion_date(run_completion_date)
@@ -185,7 +188,6 @@ def manage_run_in_processed_run_state(conn, run_process_objs):
             logger.debug('%s : End manage_run_in_processed_run_state function', experiment_name)
             continue
         parsed_run_stats_summary, parsed_run_stats_read = parsing_run_metrics_files(RUN_TEMP_DIRECTORY_PROCESSING, run_process_obj, experiment_name)
-
         for run_stat_summary in parsed_run_stats_summary :
             saved_run_stat_summary = StatsRunSummary.objects.create_stats_run_summary(run_stat_summary, run_process_obj)
         logger.info('%s : run metrics summary data saved to database', experiment_name)

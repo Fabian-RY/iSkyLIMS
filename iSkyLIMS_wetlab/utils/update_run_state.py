@@ -97,7 +97,7 @@ def search_update_new_runs (request_reason):
         raise
 
     new_runs = get_new_runs_from_remote_server (processed_runs, conn, get_samba_shared_folder())
-
+    #import pdb;pdb.set_trace()
     if len (new_runs) > 0 :
         for new_run in new_runs :
             l_run_parameter_path = os.path.join(wetlab_config.RUN_TEMP_DIRECTORY, wetlab_config.RUN_PARAMETER_FILE)
@@ -166,10 +166,11 @@ def search_update_new_runs (request_reason):
             os.remove(l_run_parameter)
             logger.info('%s  : Deleting runInfo file', experiment_name)
             os.remove(l_run_info)
-
             run_process_obj = get_run_process_obj_or_create_if_not_exists(running_parameters, experiment_name)
             sequencer_obj = get_sequencer_obj_or_create_if_no_exists(running_parameters, experiment_name)
             run_process_obj.set_used_sequencer(sequencer_obj)
+            run_process_obj.set_run_date(running_parameters['run_date'])
+            #import pdb;pdb.set_trace()
             logger.info('%s : Sequencer  stored on database', experiment_name)
             run_parameter_obj = save_run_parameters_data_to_database(running_parameters['running_data'], run_process_obj, experiment_name)
             logger.info('%s : RunParameters information  stored on database', experiment_name)
@@ -256,6 +257,7 @@ def handle_not_completed_run ():
 
     for state in runs_to_handle.keys():
         logger.info ('Start processing the run found for state %s', state)
+        #import pdb;pdb.set_trace()
         if state == 'Recorded':
             manage_run_in_recorded_state(conn, runs_to_handle[state])
 

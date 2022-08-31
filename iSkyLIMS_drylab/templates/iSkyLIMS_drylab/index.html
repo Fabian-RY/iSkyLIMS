@@ -9,19 +9,19 @@
         white-space: nowrap;
         height: 300px;
  </style>
-    <h1><div class="color-heading">{{organization_name}}</div></h1>
+    <h1><div class="color-heading">INCLIVA</div></h1>
     <h2>iSkyLIMS: DryLab</h2>
     <div class="row row-space-2 margin-b-4">
         <div class="col-sm-8">
         <div class="panel panel-default">
             <div class="panel-heading"><h3>Welcome</h3></div>
             <div class="panel-body">
-			    <p>This section will allow you to check {{organization_name}} service activity. </p>
+			    <p>This section will allow you to check INCLIVA service activity. </p>
                 <p>Available processes are: </p>
                 <ul>
                   <li>Sequencing Request Service</li>
-                  <li>Counseling Request Service</li>
-                  <li>Infra structure Request Service</li>
+                  <li>Made-to-measure Solutions</li>
+                 <!-- <li>Infra structure Request Service</li>-->
                 </ul>
                 <p>Email us for requesting detailed information about available services and conditions </p>
 		  </div> <!--// end panel body -->
@@ -37,9 +37,9 @@
 
     <div class="row row-space-2 margin-b-4">
         <div class="col-sm-12">
-            <div class="col-sm-6">
+            <div class="col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-heading"><h3>Recorded Services</h3></div>
+                <div class="panel-heading"><h3>Registered Services</h3></div>
                 <div class="panel-body">
                     {% if service_list.recorded %}
                         <div class="scrolling-wrapper">
@@ -63,12 +63,106 @@
                                 </table>
                             </div> <!--  end of scrolling wrapper -->
                     {% else %}
-                        <h5>There is no new Requested Service </h5>
+                        <h5>There is no new Registered Service </h5>
+                    {% endif %}
+                        </div>  <!--  end of panel body  -->
+                </div> <!--// end panel -->
+            </div> <!--// end col-sm-6 -->
+            <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3>Services Approved</h3></div>
+                <div class="panel-body">
+                    {% if service_list.approved %}
+                        <div class="scrolling-wrapper">
+                             <table class="table table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <th>Service Number</th>
+                                            <th>Request Center</th>
+                                            <th>Requested by</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for values in service_list.approved %}
+                                            <tr>
+                                                {% for value in values %}
+                                                    <td>{{ value }} </td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                       
+                                    </tbody>
+                                </table>
+                            </div> <!--  end of scrolling wrapper -->
+                    {% else %}
+                        <h5>There is no new Approved Service </h5>
+                    {% endif %}
+                        </div>  <!--  end of panel body  -->
+                </div> <!--// end panel -->
+            </div> <!--// end col-sm-6 -->
+            <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3>Cancelled Services</h3></div>
+                <div class="panel-body">
+                    {% if service_list.rejected %}
+                        <div class="scrolling-wrapper">
+                             <table class="table table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <th>Service Number</th>
+                                            <th>Request Center</th>
+                                            <th>Requested by</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for values in service_list.rejected %}
+                                            <tr>
+                                                {% for value in values %}
+                                                    <td>{{ value }} </td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div> <!--  end of scrolling wrapper -->
+                    {% else %}
+                        <h5>There is no new Registered Service </h5>
                     {% endif %}
     		        </div>  <!--  end of panel body  -->
                 </div> <!--// end panel -->
             </div> <!--// end col-sm-6 -->
-            <div class="col-sm-6">
+            <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3>Queue Services</h3></div>
+                <div class="panel-body">
+                    {% if service_list.queue %}
+                        <div class="scrolling-wrapper">
+                             <table class="table table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <th>Service Number</th>
+                                            <th>Request Center</th>
+                                            <th>Expected delivery date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for values in service_list.queue %}
+                                            <tr>
+                                                {% for value in values %}
+                                                    <td>{{ value }} </td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div> <!--  end of scrolling wrapper -->
+                    {% else %}
+                        <h5>There is no new Queue Service.</h5>
+                    {% endif %}
+    		        </div>  <!--  end of panel body  -->
+                </div> <!--// end panel -->
+            </div> <!--// end col-sm-6 -->
+            <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading"><h3>In progress Services</h3></div>
                 <div class="panel-body">
@@ -96,7 +190,69 @@
                     {% else %}
                         <h5>At present all requested services which we were working on, they are delivered.</h5>
                     {% endif %}
-    		        </div>  <!--  end of panel body  -->
+                        </div>  <!--  end of panel body  -->
+                </div> <!--// end panel -->
+            </div> <!--// end col-sm-6 -->
+            <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3>Finished Services</h3></div>
+                <div class="panel-body">
+                    {% if service_list.delivered %}
+                        <div class="scrolling-wrapper">
+                             <table class="table table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <th>Service Number</th>
+                                            <th>Request Center</th>
+                                            <th>Expected delivery date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for values in service_list.delivered %}
+                                            <tr>
+                                                {% for value in values %}
+                                                    <td>{{ value }} </td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div> <!--  end of scrolling wrapper -->
+                    {% else %}
+                        <h5>There is no new Finished Service.</h5>
+                    {% endif %}
+                        </div>  <!--  end of panel body  -->
+                </div> <!--// end panel -->
+            </div> <!--// end col-sm-6 -->
+            <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3>Archived Services</h3></div>
+                <div class="panel-body">
+                    {% if service_list.archived %}
+                        <div class="scrolling-wrapper">
+                             <table class="table table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <th>Service Number</th>
+                                            <th>Request Center</th>
+                                            <th>Expected delivery date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for values in service_list.archived %}
+                                            <tr>
+                                                {% for value in values %}
+                                                    <td>{{ value }} </td>
+                                                {% endfor %}
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div> <!--  end of scrolling wrapper -->
+                    {% else %}
+                        <h5>There is no new Archived Service.</h5>
+                    {% endif %}
+                        </div>  <!--  end of panel body  -->
                 </div> <!--// end panel -->
             </div> <!--// end col-sm-6 -->
         </div> <!--// end col-sm-12 -->

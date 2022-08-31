@@ -28,7 +28,7 @@ OUTPUT_DIR_RESOLUTION_PDF ='documents/drylab/resolution' # Directory to store re
 
 RESOLUTION_FILES_DIRECTORY = 'documents/drylab/resolutions'
 
-ABBREVIATION_USED_FOR_SERVICE_REQUEST = 'SRV'
+ABBREVIATION_USED_FOR_SERVICE_REQUEST = 'UBB'
 USER_CENTER_USED_WHEN_NOT_PROVIDED = 'NO_CENTER'
 
 #SAMBA_SERVICE_FOLDER = 'services'
@@ -95,7 +95,7 @@ HEADING_PENDING_SERVICE_QUEUED =['Services', 'Resolution', 'Acronym name', 'Assi
 
 HEADING_USER_PENDING_SERVICE_QUEUED =['Services', 'Resolution', 'Acronym name', 'On queued date', 'Estimated date']
 
-HEADING_SERVICE_DATES = ['Service Date Creation', 'Approval Service Date', 'Rejected Service Date', 'Service Delivered Date']
+HEADING_SERVICE_DATES = ['Service Date Creation', 'Approval Service Date', 'Rejected Service Date']
 
 HEADING_SELECT_SAMPLE_IN_SERVICE = ['Run Name', 'Run ID', 'Project Name',  'Project ID','Sample Name', 'sample id', 'Run finish date','Folder Run']
 
@@ -111,25 +111,31 @@ HEADING_PIPELINES_SELECTION_IN_RESOLUTION = ['Pipeline name', 'Pipeline version'
 MAPPING_ADDITIONAL_RESOLUTION_PARAMETERS = [('resolutionParameter', 'Parameter name'),('resolutionParamValue', 'Parameter value'),('resolutionParamNotes', 'Notes')]
 
 ################ EMAIL TEXT   ##################################
-SUBJECT_SERVICE_RECORDED = ['Service ', ' has been recorded']
-BODY_SERVICE_RECORDED = ['Dear USER_NAME','Your service  SERVICE_NUMBER has been recorded.','You will received the resolution of the request as soon as possible.',
-                    'Kind regards', 'BU-ISCIII']
+SUBJECT_SERVICE_RECORDED = ['Analisys request with ID ', ' recorded']
+BODY_SERVICE_RECORDED = ['Dear user USER_NAME','Your service request with ID SERVICE_NUMBER, has been registered correctly.','The team at Bioinformatics and Biostatistics Unic (UBB) will review your request, and you will be notified about its resolution soon. ',
+                    'If you have not requested any analysis service or have any doubts about the requested service, please, contact us via email at bioinfo@incliva.es', 'Kind Regards.', 'UBB team']
 
-SUBJECT_RESOLUTION_RECORDED = ['Resolution ', ' has been updated']
-BODY_RESOLUTION_ACCEPTED = ['Dear  USER_NAME','A new resolution has been added for your service:  SERVICE_NUMBER.', 'Your service has been STATUS',
-                    'and your delivery estimated date is DATE','Your service is now queued and you will be notified when it is updated',
-                     'Kind regards', 'BU-ISCIII']
+SUBJECT_RESOLUTION_RECORDED = ['Resolution of analisis service with ID ']
+BODY_RESOLUTION_ACCEPTED = ['Dear user  USER_NAME',' The analisis service you requested recently with ID SERVICE_NUMBER has been STATUS .', 'The estimated service end date is DATE',
+                    'Your service is queued on our analysis servers. An email will be sent once the analysis starts and once the analysis finishes.', 'If you have not requested any analysis service or have any doubts about the requested service, please, contact us via email at bioinfo@incliva.es',
+                     'Kind Regards', 'UBB team']
 BODY_RESOLUTION_REJECTED = ['Dear  USER_NAME','A new resolution has been added for your service:  SERVICE_NUMBER.', 'Your service has been STATUS',
                     'because it does not fullfil our requirements or is not in our services portfolio. If you have any question please contact us.',
-                     'Kind regards', 'BU-ISCIII']
-SUBJECT_RESOLUTION_IN_PROGRESS = ['Service ', ' has been updated']
-BODY_RESOLUTION_IN_PROGRESS = ['Dear  USER_NAME', 'Your service with resolution id:  RESOLUTION_NUMBER is now in progress.' ,
-                     'Kind regards', 'BU-ISCIII']
+                     'Kind regards', 'INCLIVA']
+SUBJECT_RESOLUTION_IN_PROGRESS = ['Service ', ' has begun']
+BODY_RESOLUTION_IN_PROGRESS = ['Dear  USER_NAME', 'Your analysis request with ID  RESOLUTION_NUMBER has recently begun. An email will be sent once the analysis is over' , 
+                     'If you have not requested any analysis service or have any doubts about the requested service, please, contact us via email at bioinfo@incliva.es', 'Kind regards', 'UBB team']
+
+
+SUBJECT_RESOLUTION_PANEL_FINISHED = ['Service ', ' has been updated']
+BODY_RESOLUTION_PANEL_FINISHED = ['Dear  USER_NAME', 'Your service with resolution id:  RESOLUTION_NUMBER - PANEL is now finished' ,
+                     'Kind regards', 'INCLIVA']
+
 
 SUBJECT_RESOLUTION_DELIVERED = ['Service ', ' has been updated']
 BODY_RESOLUTION_DELIVERED = ['Dear  USER_NAME', 'Your service with resolution id:  RESOLUTION_NUMBER is finished.' ,
                     'A mail with instructions for downloading the results will be shortly sent to you.',
-                    'Kind regards', 'BU-ISCIII']
+                    'Kind regards', 'INCLIVA']
 
 SUBJECT_SERVICE_ON_QUEUED = ['Service ', 'sent to preparation pipelines Jobs']
 BODY_SERVICE_ON_QUEUED = ['Service  SERVICE_NUMBER is on queued ']
@@ -144,3 +150,7 @@ EMAIL_CONFIGURATION_FILE_END = '########## END EMAIL CONFIGURATION FILE'
 COLORS_MULTI_LEVEL_PIE = ['#66ffff', '#99ff99', '#ffffcc','#ffcccc','#ffccff', '#ccccff','#66ccff']
 MULTI_LEVEL_PIE_PENDING_TEXT_IN_CHILD_SERVICE = "Service pending on <b>$label</b> are <b>$value</b>, which was $percentValue of parent Service"
 MULTI_LEVEL_PIE_PENDING_MAIN_TEXT =  "Please hover over a services requested Unit to see details"
+
+################ AVAILABLE SERVICES ##################
+SEQUENCING_REQUEST = "Available services"
+COUNSELING_REQUEST = ""

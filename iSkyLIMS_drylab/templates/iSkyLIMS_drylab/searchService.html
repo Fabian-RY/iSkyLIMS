@@ -32,7 +32,6 @@
                             <th>Status</th>
                             <th>Recorded Date</th>
                             <th>Approved Date</th>
-                            <th>Rejected Date</th>
                             <th>Delivery Date</th>
                             <th>Center</th>
                             <th>Project names</th>
@@ -69,7 +68,7 @@
     <div class="row row-space-4 margin-b-4">
         <div class="col-sm-7 col-sm-offset-1" >
             <div class="panel panel-default">
-                <div class="panel-heading"><strong>Searching Services</strong></div>
+                <div class="panel-heading"><strong>Service status</strong></div>
                 <div class="panel-body">
                     <form method="post" enctype="multipart/form-data" name="searchservice" id="searchservice" class="form-horizontal well">
                         {% csrf_token %}
@@ -80,7 +79,7 @@
                         </div>  <!-- end from-group   -->
                         <BR>
                         <div class="form-group">
-                            <label class="col-sm-5 control-label" for="servicestate" >Service state</label>
+                            <label class="col-sm-5 control-label" for="servicestate" >Service status</label>
                             <div class="col-sm-4">
                                 <select class="form-control" name="servicestate" id="servicestate">
                                     <option value="">Choose a value  </option>

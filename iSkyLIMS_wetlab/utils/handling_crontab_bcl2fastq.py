@@ -570,6 +570,7 @@ def process_and_store_fl_summary_data(parsed_data, run_process_obj, number_of_la
             project_flowcell['project_id'] = None
             project_flowcell['defaultAll'] = project
         else:
+  
             project_flowcell['project_id'] = Projects.objects.get(projectName__iexact = project)
             project_flowcell['defaultAll'] = None
         project_flowcell['runprocess_id'] = run_process_obj
@@ -659,11 +660,13 @@ def process_and_store_raw_demux_project_data(parsed_data, run_process_obj, exper
     '''
     logger = logging.getLogger(__name__)
     logger.debug ('%s : Starting function process_and_store_raw_demux_project_data', experiment_name)
+
     processed_raw_data = []
     project_list = []
     # check first if all project found in the parsing are already defined.
     if run_process_obj.projects_set.all().exists():
         project_objs = run_process_obj.projects_set.all()
+
         for project_obj in project_objs:
             project_list.append(project_obj.get_project_name())
 
@@ -672,7 +675,11 @@ def process_and_store_raw_demux_project_data(parsed_data, run_process_obj, exper
             continue
         if not project in project_list:
             # create project and link to the run
-            new_project_obj = Projects.objects.create_new_empty_project({'user_id':None, 'projectName':project})
+            # check if project exists yet
+            if not Projects.objects.filter(projectName__exact = project).exists():
+               new_project_obj = Projects.objects.create_new_empty_project({'user_id':None, 'projectName':project})
+            else:
+               new_project_obj =  Projects.objects.filter(projectName__exact = project).last()
             new_project_obj.runProcess.add(run_process_obj)
             string_message = experiment_name +  ' : Created  project name ' + project + 'Because it was not store'
             logging_warnings(string_message, True)
@@ -724,6 +731,7 @@ def process_and_store_samples_projects_data(parsed_data, run_process_obj, experi
     # Read sample sheet to get the user id for each smaple
     sample_sheet = run_process_obj.get_sample_file()
     samples_with_user_ids = get_sample_with_user_owner(sample_sheet)
+    
     # get the total number of read per lane
     M_BASE=1.004361/1000000
     processed_sample_data =[]
@@ -757,6 +765,7 @@ def process_and_store_samples_projects_data(parsed_data, run_process_obj, experi
             project_sample_data['meanQuality'] = mean_quality
             project_sample_data['project_id'] = Projects.objects.get(projectName__exact = project)
             project_sample_data['runProcess_id'] = run_process_obj
+            #import pdb;pdb.set_trace()
             project_sample_data['user_id'] = samples_with_user_ids[sample]
 
             new_sample_stats = SamplesInProject.objects.create_sample_project(project_sample_data)

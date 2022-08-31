@@ -19,12 +19,12 @@ from iSkyLIMS_drylab import drylab_config
 
 
 STATUS_CHOICES = (
-			('recorded',_("Recorded")),
+			('recorded',_("Registered")),
 	   		('approved',_("Approved")),
-			('rejected',_("Rejected")),
+			('rejected',_("Cancelled")),
 			('queued',_("Queued")),
 			('in_progress',_('In progress')),
-			('delivered',_("Delivered")),
+			('delivered',_("Finished")),
 			('archived',_("Archived"))
 		)
 
@@ -278,10 +278,7 @@ class Service(models.Model):
 				service_dates.append('Rejected Date not set')
 		else:
 			service_dates.append(self.serviceOnRejectedDate.strftime("%d %B, %Y"))
-		if self.serviceOnDeliveredDate is None:
-			service_dates.append('--')
-		else:
-			service_dates.append(self.serviceOnDeliveredDate.strftime("%d %B, %Y"))
+
 		return service_dates
 
 	def get_stats_information (self):
