@@ -26,4 +26,4 @@ urlpatterns = [
 
     #path('runfolder/<int:project>', views.get_runfolder,  name='get_runfolder'),
 ]
-urlpatterns = format_suffix_patterns(urlpatterns)
+# urlpatterns = format_suffix_patterns(urlpatterns)

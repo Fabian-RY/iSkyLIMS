@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 #from iSkyLIMS_drylab.models import ParameterPipeline
-from iSkyLIMS_drylab.models import Service , Resolution, RequestedSamplesInServices, AvailableService
+from iSkyLIMS_drylab.models import Service , Resolution, RequestedSamplesInServices, AvailableService, Delivery
 #from iSkyLIMS_wetlab.models import SamplesInProject
 
 '''
@@ -11,6 +11,12 @@ class ParameterPipelineSerializer (serializers.ModelSerializer):
          model = ParameterPipeline
          fields = '__all__'
 '''
+
+class CreateDeliveryPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Delivery
+        fields = ["deliveryResolutionID", "deliveryDate",
+                  "deliveryNotes", "executionStartDate"]
 
 class UserIDSerializer(serializers.ModelSerializer):
     class Meta:
