@@ -25,7 +25,7 @@ django-xmlrpc==0.1.8
 djangorestframework==3.11.1
 et-xmlfile==1.1.0
 html5lib==1.0.1
-interop==1.1.8
+interop==1.1.9
 mod-wsgi==4.7.0
 mots-vides==2015.5.11
 mysqlclient==1.4.6
