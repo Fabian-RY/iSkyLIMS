@@ -1,0 +1,71 @@
+{% extends 'iSkyLIMS_wetlab/base.html' %}
+{% load static %}_
+{% block content %}
+{% csrf_token %}
+
+<BR>
+<div class="row row-space-2 margin-b-4">
+    <div class="col-sm-12" >
+        <div class="col-sm-6" >
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3>Form to backup Run</h3> </div>
+                <div class="panel-body">
+                    <form method="post" enctype="multipart/form-data" name="addNewBackup" id="addNewBackup" class="form-horizontal">
+                        {% csrf_token %}
+                        <div class="form-group required">
+                            <input type="hidden" name="action" value="addNewBackup"/>
+                            <label class="col-sm-5 control-label">Select Run Folder</label>
+
+                            <div class="col-sm-6"><select class="form-control"  required = "required" name="runFolder" id="runFolder">
+                                           				<option value="">Choose a value</option>
+                                                        {% for value in run_list %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                        {% endfor %}
+
+                                                  </select>
+                            </div>  <!-- end select input -->
+                            <br><br><p></p>
+                            <label class="col-sm-5 control-label">Destination Folder</label>
+                            <div class="col-sm-6"><select class="form-control"  required = "required" name="destFolder" id="destFolder">
+                                                                        <option value="">Choose a value</option>
+                                                        {% for value in dest_folder %}
+                                                            <option value="{{value}}">{{value}}</option>
+                                                        {% endfor %}
+
+                                                  </select>
+                            </div>  <!-- end select input -->
+                            <BR> <BR> <BR>
+                        </div>
+                        <input class="btn pull-right btn-primary" type="submit" value="Submit" id="btnSubmit">
+                    </form>
+
+                </div>  <!--  end of panel body  -->
+                <p> Fields marked with <FONT COLOR="Red">*</FONT> are mandatory</p>
+            </div> <!--// end panel -->
+        </div> <!--// end of sm-6 -->
+    </div> <!--// end of sm-12 -->
+</div> <!--// end row -->
+ <div class="row row-space-2 margin-b-4">
+        <div class="col-sm-8" >
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4>Runs waiting for backup</h4></div>
+                <div class="panel-body">
+                    <div class="col-sm-7" >
+                        <table class="table table-hover">
+                           <tbody>
+                                {% for value  in waiting_list %}
+                                        <tr>
+                                           <td>{{ value }}</td>
+                                        </tr>
+                                {% endfor %}
+                           </tbody>
+                        </table>
+                    </div> <!--// end col-sm-6  -->
+                </div>  <!--  end of panel body  -->
+            </div> <!--// end panel -->
+
+        </div> <!--// end col-sm-6  -->
+
+    </div> <!--// end row -->
+
+{% endblock %}

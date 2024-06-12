@@ -77,8 +77,10 @@ def assign_projects_to_run(run_process_obj, sample_sheet_file , experiment_name)
             project_obj = Projects.objects.create_new_empty_project(project_data)
             projects_objs.append(project_obj)
             # assign project to runº
-            project_obj.runProcess.add(run_process_obj)
-            logger.info('%s : Project name  %s added ', experiment_name, project)
+            # check if run_process_obj has assigned to project
+            if not Projects.objects.filter(runProcess == run_process_obj, projectName__exact = project).exists():
+                project_obj.runProcess.add(run_process_obj)
+                logger.info('%s : Project name  %s added ', experiment_name, project)
         else:
             project_obj = Projects.objects.filter(projectName__exact = project).last()
             if not project_obj in projects_objs:
@@ -107,7 +109,6 @@ def check_sequencer_status_from_log_file(log_file_content, log_cycles, number_of
     logger = logging.getLogger(__name__)
     logger.debug ('%s : Starting function check_sequencer_status_from_log_file', experiment_name)
     run_completion_date = ''
-
     if 'Cancel' in log_file_content :
         run_process_obj = RunProcess.objects.filter(runName__exact = experiment_name).last()
         if run_process_obj.get_forced_continue_on_error() == True:
@@ -151,11 +152,12 @@ def check_sequencer_status_from_completion_file(l_run_completion, experiment_nam
     logger.debug ('%s : Starting function for check_sequencer_status_from_completion_file', experiment_name)
     # check if NextSEq run have been successful completed
     status_run = find_xml_tag_text (l_run_completion, COMPLETION_TAG )
-    if  status_run != COMPLETION_SUCCESS:
+    if  status_run not in COMPLETION_SUCCESS:
         logger.info('%s : Run in sequencer was not completed but %s', experiment_name, stats_run)
         string_message = experiment_name + ' : Sequencer Run was not completed. Reason was ' + status_run
         logging_warnings (string_message, False)
         logger.debug ('%s : End function for check_sequencer_status_from_completion_file', experiment_name)
+
         return False
     else:
         logger.info ('%s : Sequencer Run successfuly completed ', experiment_name)
@@ -191,10 +193,10 @@ def check_sequencer_run_is_completed(conn, run_folder , platform ,number_of_cycl
     logger.debug ('%s : Starting function check_sequencer_run_is_completed', experiment_name)
     way_to_check =''
     for method in PLATFORM_WAY_TO_CHECK_RUN_COMPLETION:
+        
         if method[0] not in platform:
             continue
         way_to_check = method[1]
-
     if way_to_check == 'logs':
 
         log_folder = os.path.join(get_samba_application_shared_folder(), run_folder , RUN_LOG_FOLDER)
@@ -404,7 +406,6 @@ def get_latest_run_procesing_log(conn, log_folder, experiment_name) :
     logger.debug ('%s : Starting function get_latest_run_procesing_log',  experiment_name)
     shared_folder = get_samba_shared_folder()
     folder_logs = os.path.join('/', get_samba_application_shared_folder(),log_folder )
-
     remote_file_list = conn.listPath( shared_folder, folder_logs)
     max_cycle = -1
     logger.info('%s : Succesful connection to fetch logs files', experiment_name)
@@ -722,6 +723,7 @@ def parsing_run_info_and_parameter_information(l_run_info, l_run_parameter, expe
      Return:
         parsing_data
     '''
+    #import pdb;pdb.set_trace()
     logger = logging.getLogger(__name__)
     logger.debug ('%s : Starting function parsing_run_information', experiment_name)
     running_data={}
@@ -786,7 +788,6 @@ def parsing_run_info_and_parameter_information(l_run_info, l_run_parameter, expe
                 running_data[field] = ''
                 string_message = experiment_name + ' : Parameter ' + field  + ' unable to fetch in RunParameter.xml'
                 logging_warnings(string_message, False)
-
     ## get the nuber of lanes in case sequencer lab is not defined
     if  parameter_data_root.find(SETUP_TAG):
         param_in_setup = ['ApplicationVersion', 'NumTilesPerSwath']

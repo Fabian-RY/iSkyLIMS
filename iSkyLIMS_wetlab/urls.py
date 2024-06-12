@@ -82,7 +82,7 @@ urlpatterns = [
     path('updateTables/',views.update_tables, name='update_tables'),
     path('updateTablesDate/',views.update_tables_date, name='update_tables_date'),
     path('userCommercialKitInventory/', views.user_commercial_kit_inventory, name = 'user_commercial_kit_inventory' ),
-
+    path('copyRun',views.copy_run, name= 'copy_run'),
 
 ]
 #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

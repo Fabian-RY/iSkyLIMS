@@ -58,7 +58,7 @@ RUN_COMPLETION_XML_FILE = 'RunCompletionStatus.xml'
 RUN_COMPLETION_TXT_FILE = 'SequenceComplete.txt'
 SAMPLE_SHEET = 'samplesheet.csv'
 ## sample sheet to be copied on the remote folder
-COPY_SAMPLE_SHEET_TO_REMOTE = True # boolean constant True if NextSeq
+COPY_SAMPLE_SHEET_TO_REMOTE = False # boolean constant True if NextSeq
                                 # sample sheet needs to be copied to remote server
 RUN_LOG_FOLDER = 'Logs'
 
@@ -71,11 +71,11 @@ CONVERSION_STATS_FILE = 'ConversionStats.xml'
 DEMULTIPLEXION_STATS_FILE = 'DemultiplexingStats.xml'
 ##############################################################
 
-PLATFORM_WAY_TO_CHECK_RUN_COMPLETION = [['NextSeq', 'xml_file'],['MiSeq', 'logs'], ['NovaSeq','txt_file']]
+PLATFORM_WAY_TO_CHECK_RUN_COMPLETION = [['NextSeq', 'xml_file'],['MiSeq', 'xml_file'], ['NovaSeq','txt_file']]
 
 ############ VALUE TAG FOR XML FILES #########################
 COMPLETION_TAG = 'CompletionStatus'
-COMPLETION_SUCCESS = 'CompletedAsPlanned'
+COMPLETION_SUCCESS = ['CompletedAsPlanned','SuccessfullyCompleted']
 EXPERIMENT_NAME_TAG = 'ExperimentName'
 APPLICATION_NAME_TAG = 'ApplicationName'
 NUMBER_CYCLES_TAG = 'NumCycles'
@@ -283,7 +283,7 @@ HEADING_FOR_STATISTICS_RUNS_BASIC_DATA = ['Run Name', 'Date sequencer start']
 RESEARCHER_SAMPLE_HEADING_STATISTICS = ['Samples','Project name','Run name' , 'Date', 'Cluster PF', 'Yield Mb', '% Q> 30', 'Mean']
 
 
-NUMBER_OF_VALUES_TO_FETCH_FROM_RESEARCHER = 5
+NUMBER_OF_VALUES_TO_FETCH_FROM_RESEARCHER = 10
 
 ############### SUCCESSFUL_MESSAGES #######################################
 SUCCESSFUL_RUN_STATE_CHANGE_FOR_RETRY = ['State of the Run has changed back to the state previous to error', 'Now the run is again in the process for updating information',
@@ -413,3 +413,9 @@ EMPTY_FIELDS_IN_SEQUENCER = ['platformID', 'sequencerDescription', 'sequencerLoc
 ######## Sample comparation #########################
 HEADING_COMPARATION_SAMPLE_LIST = ['Sample Nane', 'Project', 'Run Name', 'Completed', 'Select Sample']
 HEADING_COMPARATION_SAMPLE_INFORMATION = ['Sample Name', 'Barcode Name', 'Run Name', 'Number of samples', 'pfClusters', '% in Project', 'yielddMB', 'Quality >Q30', 'Mean Quality']
+
+######## Backup runs ################################
+DEST_BACKUP = ['/nfs/backupp5/','/nfs/backupp1/']
+HOST_BACKUP = 'sftp.incliva.es'
+USER_BACKUP = 'django'
+HOST_BACKUP_FOLDER = '/media/datos/precision/precisionlabo/raw_data/'

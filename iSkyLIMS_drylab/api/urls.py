@@ -21,8 +21,8 @@ urlpatterns = [
     path('resolution', views.resolution_data, name='resolution_data'),
     path('samplesInService', views.samples_in_service, name = 'samples_in_service'),
     path('updateResolution',views.update_resolution_to_in_progress, name = 'update_resolution_to_in_progress'),
-
-
+    path('updateResolutionINCLIPIPE',views.update_resolution_to_inclipipe_state, name ='update_resolution_to_inclipipe_state'),
+    path('updateResolutionPanelINCLIPIPE',views.update_resolution_panel_to_inclipipe_state, name ='update_resolution_panel_to_inclipipe_state'),
 
     #path('runfolder/<int:project>', views.get_runfolder,  name='get_runfolder'),
 ]

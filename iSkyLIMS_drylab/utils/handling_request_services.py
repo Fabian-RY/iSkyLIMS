@@ -330,9 +330,13 @@ def get_pending_services_information():
             pending_services_per_unit[unit_res]['queued'] += 1
 
     # Resolution in progress
-    if Resolution.objects.filter(resolutionState__resolutionStateName__exact = 'In Progress').exists():
+    #if Resolution.objects.filter(resolutionState__resolutionStateName__exact = 'In Progress').exists():
+    if Resolution.objects.filter(resolutionState__resolutionStateName = 'In Progress' ).exists() or Resolution.objects.filter(resolutionState__resolutionStateName = 'INCLIPIPE_COPY' ).exists():
         resolution_recorded_objs = Resolution.objects.filter(resolutionState__resolutionStateName__exact = 'In Progress').order_by('-resolutionServiceID')
+        resolution_recorded_objs2 = Resolution.objects.filter(resolutionState__resolutionStateName__exact = 'INCLIPIPE_COPY').order_by('-resolutionServiceID')
         for resolution_recorded_obj in resolution_recorded_objs :
+            in_progress.append(resolution_recorded_obj.get_information_for_pending_resolutions())
+        for resolution_recorded_obj in resolution_recorded_objs2 :
             in_progress.append(resolution_recorded_obj.get_information_for_pending_resolutions())
         pending_services_details['in_progress'] = in_progress
         pending_services_details['heading_in_progress'] = drylab_config.HEADING_PENDING_SERVICE_QUEUED
@@ -654,7 +658,7 @@ def prepare_form_data_request_service_sequencing (request):
 
     if is_service_manager(request):
         service_data_information['users'] = get_defined_username_and_ids()
-    service_data_information['nodes'] = AvailableService.objects.filter(availServiceDescription__exact="Genomic data analysis").get_descendants(include_self=True).exclude(inUse = False)
+    service_data_information['nodes'] = AvailableService.objects.filter(availServiceDescription__exact=drylab_config.SEQUENCING_REQUEST).get_descendants(include_self=True).exclude(inUse = False)
 
     if wetlab_api_available :
 		## get samples which have sequencing data in iSkyLIMS
@@ -684,7 +688,7 @@ def prepare_form_data_request_counseling_service():
     	service_data_information
     '''
     service_data_information = {}
-    service_data_information['nodes'] = AvailableService.objects.filter(availServiceDescription__exact="Bioinformatics consulting and training").get_descendants(include_self=True)
+    service_data_information['nodes'] = AvailableService.objects.filter(availServiceDescription__exact=drylab_config.COUNSELING_REQUEST).get_descendants(include_self=True)
     return service_data_information
 
 def prepare_form_data_request_infrastructure_service():
@@ -723,7 +727,8 @@ def send_service_creation_confirmation_email(email_data):
     body_message = '\n'.join(body_preparation)
     notification_user = ConfigSetting.objects.filter(configurationName__exact = 'EMAIL_FOR_NOTIFICATIONS').last().get_configuration_value()
     from_user = notification_user
-    to_users = [email_data['user_email'], notification_user]
+    #to_users = [email_data['user_email'], notification_user]
+    to_users = [email_data['user_email']]
     try:
         send_mail (subject, body_message, from_user, to_users)
     except:

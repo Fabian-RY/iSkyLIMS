@@ -9,7 +9,7 @@ from iSkyLIMS_drylab.models import *
 from .serializers import *
 
 from iSkyLIMS_drylab.utils.handling_resolutions import send_resolution_in_progress_email
-
+from iSkyLIMS_drylab.utils.handling_resolutions import send_resolution_panel_in_progress_email
 '''
 try:
    from iSkyLIMS_wetlab.utils.api.wetlab_api  import *
@@ -128,6 +128,37 @@ def update_resolution_to_in_progress(request):
             email_data['user_email'] = service_obj.get_user_email()
             email_data['user_name'] = service_obj.get_username()
             email_data['resolution_number'] = resolution_obj.get_resolution_number()
+            #send_resolution_in_progress_email(email_data)
+
+            return Response(updated_resolution_serializer.data, status = status.HTTP_200_OK)
+
+        else:
+            return Response(status = status.HTTP_204_NO_CONTENT)
+    else:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def update_resolution_to_inclipipe_state(request):
+    '''
+    Update the status of a resolution.
+    To do this, two parameters must be passed, both of them **mandatory**, the *resolution* parameter is the number of the resolution
+    and the *state* parameter is the state to which we want to update the resolution.
+    '''
+    if 'resolution' in request.query_params:
+        if Resolution.objects.filter(resolutionNumber__exact = request.query_params['resolution']).exists():
+            resolution_obj = Resolution.objects.get(resolutionNumber__exact =request.query_params['resolution'])
+            state =  request.query_params['state']
+            try:
+               state_obj = ResolutionStates.objects.get(resolutionStateName__exact = state)
+            except:
+               return Response(status = status.HTTP_400_BAD_REQUEST)
+            updated_resolution = UpdateResolutionSerializer.update(resolution_obj,state_obj)
+            updated_resolution_serializer = UpdateResolutionSerializer(resolution_obj)
+            service_obj = resolution_obj.get_service_obj()
+            email_data = {}
+            email_data['user_email'] = service_obj.get_user_email()
+            email_data['user_name'] = service_obj.get_username()
+            email_data['resolution_number'] = resolution_obj.get_resolution_number()
             send_resolution_in_progress_email(email_data)
 
             return Response(updated_resolution_serializer.data, status = status.HTTP_200_OK)
@@ -137,7 +168,38 @@ def update_resolution_to_in_progress(request):
     else:
         return Response(status = status.HTTP_400_BAD_REQUEST)
 
+@api_view(['PUT'])
+def update_resolution_panel_to_inclipipe_state(request):
+    '''
+    Update the status of a resolution.
+    To do this, two parameters must be passed, both of them **mandatory**, the *resolution* parameter is the number of the resolution
+    and the *state* parameter is the state to which we want to update the resolution.
+    '''
+    if 'resolution' in request.query_params:
+        if Resolution.objects.filter(resolutionNumber__exact = request.query_params['resolution']).exists():
+            resolution_obj = Resolution.objects.get(resolutionNumber__exact =request.query_params['resolution'])
+            state =  request.query_params['state']
+            panel = request.query_params['panel']
+            try:
+               state_obj = ResolutionStates.objects.get(resolutionStateName__exact = state)
+            except:
+               return Response(status = status.HTTP_400_BAD_REQUEST)
+            updated_resolution = UpdateResolutionSerializer.update(resolution_obj,state_obj)
+            updated_resolution_serializer = UpdateResolutionSerializer(resolution_obj)
+            service_obj = resolution_obj.get_service_obj()
+            email_data = {}
+            email_data['user_email'] = service_obj.get_user_email()
+            email_data['user_name'] = service_obj.get_username()
+            email_data['resolution_number'] = resolution_obj.get_resolution_number()
+            email_data['panel'] = panel
+            send_resolution_panel_in_progress_email(email_data)
 
+            return Response(updated_resolution_serializer.data, status = status.HTTP_200_OK)
+
+        else:
+            return Response(status = status.HTTP_204_NO_CONTENT)
+    else:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
 
 
 

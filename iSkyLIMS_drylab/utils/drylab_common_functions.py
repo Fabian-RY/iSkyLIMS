@@ -51,11 +51,12 @@ def create_service_id (service_number,user_name):
 	Return:
 		service_id
 	'''
-    try:
-        user_center = Profile.objects.get(profileUserID = user_name).profileCenter.centerAbbr
-    except:
-        user_center = drylab_config.USER_CENTER_USED_WHEN_NOT_PROVIDED
-    service_id = drylab_config.ABBREVIATION_USED_FOR_SERVICE_REQUEST + user_center + service_number
+    #try:
+    #    user_center = Profile.objects.get(profileUserID = user_name).profileCenter.centerAbbr
+    #except:
+    #    user_center = drylab_config.USER_CENTER_USED_WHEN_NOT_PROVIDED
+    #service_id = drylab_config.ABBREVIATION_USED_FOR_SERVICE_REQUEST + user_center + service_number
+    service_id = drylab_config.ABBREVIATION_USED_FOR_SERVICE_REQUEST +  service_number
     return service_id
 
 
@@ -96,6 +97,26 @@ def is_service_manager (request):
     return True
 
 def increment_service_number ( request_user):
+    '''
+    Description:
+        The function will check if the logged user belongs to service
+        manager group
+    Input:
+        request_user # request user obj
+    Return:
+        service_number
+    '''
+    day_service = str(time.strftime("%Y%m%d"))
+    if Service.objects.last() is not  None:
+        number_request_all =  Service.objects.last().get_service_request_integer()
+        ind = number_request_all.index('_')
+        number_request = number_request_all[ind+1:]
+        service_number =  day_service + '_' + str(int(number_request) + 1).zfill(3)
+    else:
+        service_number = day_service + '_' + '001'
+    return service_number
+
+def increment_service_number_original ( request_user):
     '''
     Description:
         The function will check if the logged user belongs to service

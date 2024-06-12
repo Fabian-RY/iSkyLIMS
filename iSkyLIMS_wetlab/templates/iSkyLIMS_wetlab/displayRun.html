@@ -653,6 +653,7 @@
                                                 <div id="box_chart1"> </div>
                                                 <!-- dumping JavaScript code here -->
                                                 {{ display_one_run.boxplot |safe }}
+                                               
                                             </div> <!--  end of panel body -->
                                         {% endif %}
                                         {% if display_one_run.not_boxplot %}
@@ -665,6 +666,94 @@
                                         {% endif %}
                                     </div> <!--  end of panel  -->
                                 </div> <!--  end of col-sm-10 -->
+                            </div> <!--  end of row -->
+                            <div class="row row-space-2 margin-b-4">
+                               <div class="col-sm-5 ">
+                                    <div class="panel panel-default">
+                                        {% if display_one_run.boxplotQ30 %}
+                                            <div class="panel-heading"><h3>Graphic to compare Q30 value data versus all runs on the same year</h3></div>
+                                            <div class="panel-body">
+                                                <div id="boxmetric_chart0"> </div>
+                                                <!-- dumping JavaScript code here -->
+                                                {{ display_one_run.boxplotQ30 |safe }}
+                                            </div> <!--  end of panel body -->
+
+                                        {% endif %}
+                                        {% if display_one_run.not_boxplotQ30 %}
+                                            <div class="panel-heading"><h3>Graphic boxplot comparation can not be displayed</h3></div>
+                                                <div class="panel-body">
+                                                    <p class="text-center">There is only one run in the same year as {{ display_one_run.data.0.1 }}.</p>
+                                                    <p class="text-center">For that reason it cannot be compared</p>
+                                                </div> <!--  end of panel body -->
+                                            </div> <!--  end of panel  -->
+                                        {% endif %}
+                                    </div> <!--  end of panel  -->
+                                </div> <!--  end of col-sm-5 -->
+                                 <div class="col-sm-5 ">
+                                    <div class="panel panel-default">
+                                        {% if display_one_run.boxplotmean %}
+                                            <div class="panel-heading"><h3>Graphic to compare Mean Quality score data versus all runs on the same year</h3></div>
+                                            <div class="panel-body">
+                                                <div id="boxmetric_chart1"> </div>
+                                                <!-- dumping JavaScript code here -->
+                                                {{ display_one_run.boxplotmean |safe }}
+                                            </div> <!--  end of panel body -->
+
+                                        {% endif %}
+                                        {% if display_one_run.not_boxplotmean %}
+                                            <div class="panel-heading"><h3>Graphic boxplot comparation can not be displayed</h3></div>
+                                                <div class="panel-body">
+                                                    <p class="text-center">There is only one run in the same year as {{ display_one_run.data.0.1 }}.</p>
+                                                    <p class="text-center">For that reason it cannot be compared</p>
+                                                </div> <!--  end of panel body -->
+                                            </div> <!--  end of panel  -->
+                                        {% endif %}
+                                    </div> <!--  end of panel  -->
+                                </div> <!--  end of col-sm-5 -->
+                            </div> <!--  end of row -->
+                             <div class="row row-space-2 margin-b-4">
+                               <div class="col-sm-5 ">
+                                    <div class="panel panel-default">
+                                        {% if display_one_run.boxplotyield %}
+                                            <div class="panel-heading"><h3>Graphic to compare Yield (Mbases) data versus all runs on the same year</h3></div>
+                                            <div class="panel-body">
+                                                <div id="boxmetric_chart2"> </div>
+                                                <!-- dumping JavaScript code here -->
+                                                {{ display_one_run.boxplotyield |safe }}
+                                            </div> <!--  end of panel body -->
+
+                                        {% endif %}
+                                        {% if display_one_run.not_boxplotyield %}
+                                            <div class="panel-heading"><h3>Graphic boxplot comparation can not be displayed</h3></div>
+                                                <div class="panel-body">
+                                                    <p class="text-center">There is only one run in the same year as {{ display_one_run.data.0.1 }}.</p>
+                                                    <p class="text-center">For that reason it cannot be compared</p>
+                                                </div> <!--  end of panel body -->
+                                            </div> <!--  end of panel  -->
+                                        {% endif %}
+                                    </div> <!--  end of panel  -->
+                                </div> <!--  end of col-sm-5 -->
+                                 <div class="col-sm-5 ">
+                                    <div class="panel panel-default">
+                                        {% if display_one_run.boxplotclusters %}
+                                            <div class="panel-heading"><h3>Graphic to compare PF Clusters data versus all runs on the same year</h3></div>
+                                            <div class="panel-body">
+                                                <div id="boxmetric_chart3"> </div>
+                                                <!-- dumping JavaScript code here -->
+                                                {{ display_one_run.boxplotclusters |safe }}
+                                            </div> <!--  end of panel body -->
+
+                                        {% endif %}
+                                        {% if display_one_run.not_boxplotclusters %}
+                                            <div class="panel-heading"><h3>Graphic boxplot comparation can not be displayed</h3></div>
+                                                <div class="panel-body">
+                                                    <p class="text-center">There is only one run in the same year as {{ display_one_run.data.0.1 }}.</p>
+                                                    <p class="text-center">For that reason it cannot be compared</p>
+                                                </div> <!--  end of panel body -->
+                                            </div> <!--  end of panel  -->
+                                        {% endif %}
+                                    </div> <!--  end of panel  -->
+                                </div> <!--  end of col-sm-5 -->
                             </div> <!--  end of row -->
                         </div><!-- // end of tab graphComparation -->
                         {% if display_one_run.runSummary %}

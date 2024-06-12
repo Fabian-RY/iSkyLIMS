@@ -19,12 +19,12 @@ from iSkyLIMS_drylab import drylab_config
 
 
 STATUS_CHOICES = (
-			('recorded',_("Recorded")),
+			('recorded',_("Registered")),
 	   		('approved',_("Approved")),
-			('rejected',_("Rejected")),
+			('rejected',_("Cancelled")),
 			('queued',_("Queued")),
 			('in_progress',_('In progress')),
-			('delivered',_("Delivered")),
+			('delivered',_("Finished")),
 			('archived',_("Archived"))
 		)
 

@@ -127,7 +127,6 @@ def get_samba_connection_data():
     if SambaConnectionData.objects.all().exists():
         samba_connection_obj = SambaConnectionData.objects.all().last()
         samba_data = samba_connection_obj.get_samba_data()
-
     return samba_data
 
 def save_samba_connection_data(data):
@@ -164,7 +163,7 @@ def open_samba_connection():
     if not samba_data :
         string_message = 'Samba connection data on database is empty'
         logging_errors (string_message, True, False)
-    if samba_data['SAMBA_APPLICATION_FOLDER_NAME'] != '':
+    if samba_data['SAMBA_APPLICATION_FOLDER_NAME'] != None:
         samba_data['SAMBA_SHARED_FOLDER_NAME'] = os.path.join(samba_data['SAMBA_SHARED_FOLDER_NAME'] , samba_data['SAMBA_APPLICATION_FOLDER_NAME'])
     conn = SMBConnection(samba_data['SAMBA_USER_ID'], samba_data['SAMBA_USER_PASSWORD'],
         samba_data['SAMBA_SHARED_FOLDER_NAME'],samba_data['SAMBA_REMOTE_SERVER_NAME'],
@@ -175,6 +174,7 @@ def open_samba_connection():
         conn.connect(socket.gethostbyname(samba_data['SAMBA_HOST_NAME']), int(samba_data['SAMBA_PORT_SERVER']))
     else:
         conn.connect(samba_data['SAMBA_IP_SERVER'], int(samba_data['SAMBA_PORT_SERVER']))
+    #conn.connect("127.0.0.1", 445)
     #except:
         #string_message = 'Unable to connect to remote server'
         #logging_errors (string_message, True, True)

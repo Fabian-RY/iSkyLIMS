@@ -45,9 +45,9 @@
                                 {% endif %}
                                 <li class=" js_nav-item nav-item dropdown"><a class=" nav-item-child nav-item-hover dropdown-toggle" data-toggle="dropdown" href="#">SERVICES REQUEST<span class="caret"></span></a>
                                     <ul class="dropdown-menu">
-                                        <li><a href="/drylab/requestSequencingService">SEQUENCING REQUEST</a></li>
-                                        <li><a href="/drylab/counselingRequest">COUNSELING REQUEST</a></li>
-                                        <li><a href="/drylab/infrastructureRequest">INFRASTRUCTURE REQUEST</a></li>
+                                        <li><a href="/drylab/requestSequencingService">STANDARD ANALYSES</a></li>
+                                        <li><a href="/drylab/counselingRequest">MADE-TO-MEASURE SOLUTIONS</a></li>
+                                       <!-- <li><a href="/drylab/infrastructureRequest">INFRASTRUCTURE REQUEST</a></li>-->
                                     </ul>
                                 </li>
                                 {% if user.is_authenticated and request.user|has_group:"ServiceManager" %}
@@ -59,7 +59,7 @@
                                     </li>
                                 {% endif %}
                                 {% if user.is_authenticated and request.user|has_group:"ServiceManager" %}
-                                    <li class="js_nav-item nav-item dropdown"><a class="nav-item-child nav-item-hover dropdown-toggle" data-toggle="dropdown" href="#">MANAGE SERVICES<span class="caret"></span></a>
+                                    <li class="js_nav-item nav-item dropdown"><a class="nav-item-child nav-item-hover dropdown-toggle" data-toggle="dropdown" href="#">MY SERVICES<span class="caret"></span></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="/drylab/searchService">SEARCH SERVICE</a></li>
                                             <li><a href="/drylab/pendingServices">PENDING SERVICES</a></li>
@@ -70,7 +70,7 @@
                                         </ul>
                                     </li>
                                 {% else %}
-                                    <li class="js_nav-item nav-item dropdown"><a class="nav-item-child nav-item-hover dropdown-toggle" data-toggle="dropdown" href="#">MANAGE SERVICES<span class="caret"></span></a>
+                                    <li class="js_nav-item nav-item dropdown"><a class="nav-item-child nav-item-hover dropdown-toggle" data-toggle="dropdown" href="#">MY SERVICES<span class="caret"></span></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="/drylab/searchService">SEARCH SERVICE</a></li>
                                         </ul>
@@ -118,7 +118,7 @@
                 </div>
                 <div class="row row-space-2 margin-b-4">
                     <div class="col-sm-12">
-                        <h1 class="text-center"> Requesting Services Application</h1>
+                        <h1 class="text-center"> Bioinformatics Services</h1>
                     </div>  <!-- End application pannel -->
                 </div>
             {% block content %}

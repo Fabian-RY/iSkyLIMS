@@ -123,7 +123,7 @@
         <div class="col-sm-12">
             <div class="tab">
                 <button class="tablinks" onclick="summaryBin(event, 'newPatient')" id="defaultOpen" >Define new Patient</button>
-                <button class="tablinks" onclick="summaryBin(event, 'batchPatient')">Define batch Patient</button>
+                <button class="tablinks" onclick="summaryBin(event, 'batchPatient')">Define a batch  of Patients</button>
 
                 <div id="newPatient" class="tabcontent">
                     <div class="row row-space-4 margin-b-4">
@@ -242,7 +242,7 @@
                     <div class="row row-space-4 margin-b-4">
                         <div class="col-sm-10 col-sm-offset-1" >
                             <div class="panel panel-default">
-                                <div class="panel-heading"><h3 style="text-align:center">Load Patient in batch</h3></div>
+                                <div class="panel-heading"><h3 style="text-align:center">Upload Patient file</h3></div>
                                 <div class="panel-body">
                                     <form method="post" enctype="multipart/form-data" name="defineBatchPatient"  id="defineBatchPatient" class="form-horizontal well" style="min-height: 700px;">
                                         {% csrf_token %}

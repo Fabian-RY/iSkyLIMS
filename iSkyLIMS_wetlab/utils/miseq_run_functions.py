@@ -226,7 +226,6 @@ def miseq_parsing_run_information(run_info, run_parameter, experiment_name):
     date = p_run.find('Date').text
     logger.info('%s : Found date %s', experiment_name, date)
     run_date = datetime.datetime.strptime(date, '%y%m%d')
-
     logger.debug ('%s : End function for parsing xml file for miSeq run', experiment_name)
     return running_data, run_date, instrument
 

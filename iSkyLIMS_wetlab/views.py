@@ -43,7 +43,7 @@ from iSkyLIMS_core.utils.generic_functions import get_inital_sample_settings_val
 from iSkyLIMS_core.utils.handling_protocols import display_protocol_list
 from iSkyLIMS_core.utils.handling_load_batch_samples import *
 #from iSkyLIMS_core.utils.handling_commercial_kits import *
-
+from iSkyLIMS_wetlab.utils.handling_copy_run import *
 
 def index(request):
     #
@@ -4025,3 +4025,46 @@ def sequencer_inventory(request):
         return render(request, 'iSkyLIMS_wetlab/sequencerInventory.html', {'sequencer_data':sequencer_data} )
 
     return
+
+@login_required
+def copy_run (request):
+    ## Check user == WETLAB_MANAGER: if false,  redirect to 'login' page
+    if request.user.is_authenticated:
+        if not is_wetlab_manager(request):
+            return render (
+                request,'iSkyLIMS_wetlab/error_page.html',
+                {'content':['You do not have enough privileges to see this page ',
+                            'Contact with your administrator .']})
+    else:
+        #redirect to login webpage
+        return redirect ('/accounts/login')
+    # get the list of defined protocols
+    result = ''
+    run_list = display_available_runs (__package__)
+    dest_folder = []
+    waiting_list = []
+    waiting_list = waiting_json_backup()
+    dest_folder = DEST_BACKUP
+
+    if request.method == 'POST' and request.POST['action'] == 'addNewBackup':
+        run_folder = request.POST['runFolder']
+        run_dest = request.POST['destFolder']
+        try:
+           #statebackup = copy_rsync(run_folder, run_dest)
+           #print(statebackup)
+
+           create_json_backup(run_folder,run_dest)
+           print('creado json')
+           result = 'ok'
+        except Exception as e:
+              result =  "status" + str(e)
+        print(result)
+        waiting_list = waiting_json_backup()
+        #if check_if_protocol_exists (new_protocol, __package__):
+        #    return render ( request,'iSkyLIMS_wetlab/error_page.html',{'content':['Protocol Name ', new_protocol,
+        #                    'Already exists.']})
+        #new_protocol_id = create_new_protocol(new_protocol, protocol_type, description, __package__)
+
+        return render(request, 'iSkyLIMS_wetlab/copyRun.html',{'run_list': run_list, 'dest_folder': dest_folder, 'waiting_list':waiting_list})
+    waiting_list = waiting_json_backup()
+    return render(request, 'iSkyLIMS_wetlab/copyRun.html',{'run_list':run_list,  'dest_folder': dest_folder, 'waiting_list':waiting_list})

@@ -209,7 +209,7 @@ def handle_nextseq_recorded_run (conn, new_run, l_run_parameter, l_run_info, exp
         os.remove(l_run_parameter)
         logger.info('%s  : Deleting runInfo file', experiment_name)
         os.remove(l_run_info)
-
+        
         # store the run parameters in database
         run_parameter_obj = save_run_parameters_data_to_database(running_parameters['running_data'], run_process_obj)
 

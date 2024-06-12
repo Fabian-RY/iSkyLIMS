@@ -117,3 +117,27 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# new things to ignore while setting up repository (due to folder being django home)
+.Xauthority
+.bash_history
+.bashrc
+.config/
+.dbus/
+.gitconfig
+.lesshst
+.local/
+.mozilla/
+.mysql_history
+.nano/
+.profile
+.selected_editor
+.ssh/
+.viminfo
+
+# esto son archivos que simplemente no queremos mantener en git
+incrun/bcl2fastq2_v2.20.0.422.sif
+jsonbackup/*
+
+# scripts utilizados en algún momento para hacer consultas sql y entregar una tabla a Pilar
+scripts_sql
