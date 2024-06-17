@@ -9,12 +9,11 @@ logs/
 static/
 #--- updates introduced for iSkyLIMS in submodules packaging ---
 virtualenv/
-iSkyLIMS/
+# iSkyLIMS/ # Lo incluimos para trackear cambios en los settings
 *iskylims/
 documents/
 manage.py
 logs/
-
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -4027,7 +4027,7 @@ def sequencer_inventory(request):
     return
 
 @login_required
-def copy_run (request):
+def copy_run(request):
     ## Check user == WETLAB_MANAGER: if false,  redirect to 'login' page
     if request.user.is_authenticated:
         if not is_wetlab_manager(request):
