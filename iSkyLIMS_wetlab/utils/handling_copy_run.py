@@ -159,9 +159,17 @@ def waiting_json_backup():
     return  waiting_list
 
 def copy_rsync_crontab():
+    """
+    Se encarga de realizar la copia utilizando rsync (sysrsync). Se lee el json que indica el estado del run y si está
+    en estado 'waiting' se procede a copiar el run. Si el run ya ha sido copiado, no se hace nada (se comprueba mirando
+    si ya existe la carpeta en el nfs). Una vez copiado el run, se cambia el estado del json a 'backup' y se lanza el
+    demultiplexado utilizando la función copy_samba().
+    """
+    sys.stdout.flush() # para vacíar el buffer de salida (lo que esté en buffer por escribir)
+
     # Imprime la hora actual al inicio de la ejecución
     start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"Inicia la ejecución de copy_rsync_crontab: {start_time}")
+    print(f"Inicia la ejecución de copy_rsync_crontab: {start_time}\n", flush = True) # flush = True para que se imprima inmediatamente, si no el log no se forma "bien"
 
     content_jsonbackup = os.listdir(os.path.join(settings.BASE_DIR,'jsonbackup'))
 
@@ -172,7 +180,7 @@ def copy_rsync_crontab():
         if (extensionfile == ".json"):
             file = os.path.join(settings.BASE_DIR,'jsonbackup', file)
 
-            # Se lee el json
+            # Se lee el json que indica el estado del run (waiting, backup)
             with open(file,'r') as j:
                 data_backup = json.load(j)
 
@@ -193,42 +201,38 @@ def copy_rsync_crontab():
                 user_source = wetlab_config.USER_BACKUP
 
                 ssh_client, sftp = open_connect_sftp(host_source ,user_source)
-                print('ssh_client: ', ssh_client)
+                # print('ssh_client: ', ssh_client, flush = True)
 
                 source_folder =  wetlab_config.HOST_BACKUP_FOLDER + data_backup['source']
-                print('source_folder: ', source_folder)
+                print('\nsource_folder: ', source_folder, flush = True)
+                print('destination folder: ', data_backup['destination'], flush = True)
 
                 try:
-                    print('Comienza la copia del run con sysrsync...')
+                    print('\nComienza la copia del run con sysrsync...\n', flush = True)
 
                     # se lanza la copia del run utilizando rsync
-                    x = ssh_client.exec_command(sysrsync.run(
+                    command = sysrsync.run(
                         source = source_folder,
-                        source_ssh =  wetlab_config.HOST_BACKUP,
-                        destination =  data_backup['destination'],
+                        source_ssh = wetlab_config.HOST_BACKUP,
+                        destination = data_backup['destination'],
                         options = ['-avs'],
                         sync_source_contents = False,
-                        ))
+                    )
+
+                    print(f"\nreturncode: {command.returncode}", flush = True) # si todo va bien, será 0
 
                 except TypeError as e:
-                    print('error: ', e)
-                    # print('stdin: ', stdin)
-                    # print('stdout: ', stdout)
-                    # print('stderr: ', stderr)
-                    # print('object of type CompletedProcess has no len()')
+                    print('\nerror: ', e, flush = True)
                     # exit(1)
 
                 except OSError as e:
-                    print('error: ', e)
-                    # print('stdin: ', stdin)
-                    # print('stdout: ', stdout)
-                    # print('stderr: ', stderr)
+                    print('\nerror: ', e, flush = True)
                     # exit(1)
 
-                print('Ha terminado el sysrsync.')
+                print('\nHa terminado el sysrsync.\n', flush = True)
                 close_connect_sftp(ssh_client, sftp)
 
-                print('Se cambia el estado a "backup" en el json.')
+                print('Se cambia el estado a "backup" en el json.\n', flush = True)
                 data_backup['status'] = 'backup'
 
                 with open(file, 'w') as j:
@@ -238,30 +242,37 @@ def copy_rsync_crontab():
                 runFolder = data_backup['source']
 
                 # lanzar copia a SAMBA (aquí se hace el demultiplexado)
-                print('Se copia el run a SAMBA.')
+                print('Se ejecuta copy_samba.\n', flush = True)
                 copy_samba(runFolder, nfsFolder)
 
-            else:
-                print('ya copiado: ', file)
+            else: # ya está la carpeta em el nfs o el status del json no es 'waiting'
+                print('ya copiado: ', file, flush = True)
+
+            sys.stdout.flush() # para vacíar el buffer de salida (lo que esté en buffer por escribir)
 
 def copy_samba(runFolder, nfsFolder):
+    """
+    Esta función se encarga de realizar el demultiplexado utilizando el script inc_copy_to_iskylims_v3.sh.
+    """
+    sys.stdout.flush() # para vacíar el buffer de salida (lo que esté en buffer por escribir)
+
     # Imprime la hora actual al inicio de la ejecución
     start_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"Inicia la ejecución de copy_samba: {start_time}")
+    print(f"Inicia la ejecución de copy_samba: {start_time}\n", flush = True)
 
     try:
-        print('Se empieza a ejecutar copy_samba.')
         samba_data = {}
         samba_data = get_samba_connection_data()
         sambaFolder  = samba_data['SAMBA_SHARED_FOLDER_NAME']
 
-        print('Comienza el demultiplexado (inc_run/inc_copy_to_iskylims_v3.sh)...')
+        print('\nComienza el demultiplexado (inc_run/inc_copy_to_iskylims_v3.sh)...\n', flush = True)
         subprocess.run([os.path.join(settings.BASE_DIR,'inc_run/inc_copy_to_iskylims_v3.sh'),'-o',nfsFolder,'-r', runFolder, '-s',sambaFolder])
 
     except OSError:
         stderr.print(
             "[red] ERROR could not be copied data",
             highlight = False,
+            flush = True
             )
 
 # # no usar
